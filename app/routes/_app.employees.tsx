@@ -59,7 +59,7 @@ export async function action({ request, context }: Route.ActionArgs) {
         name: formData.get("name"),
         email: formData.get("email"),
         position: formData.get("position"),
-        departmentId: formData.get("departmentId"),
+        workShiftId: formData.get("workShiftId"),
       });
 
       if (!parsed.success) {
@@ -90,7 +90,7 @@ export async function action({ request, context }: Route.ActionArgs) {
         name: formData.get("name"),
         email: formData.get("email"),
         position: formData.get("position"),
-        departmentId: formData.get("departmentId"),
+        workShiftId: formData.get("workShiftId"),
       });
 
       if (!parsed.success) {
@@ -277,7 +277,7 @@ export default function EmployeesPage() {
           </div>
 
           <div>
-            <label>Department (FK Dropdown)</label>
+            <label>Work Shift (FK Dropdown)</label>
             <WorkShiftDropdown
               name="workShiftId"
               workShifts={workShifts}
@@ -317,7 +317,7 @@ export default function EmployeesPage() {
             <th>Nama</th>
             <th>Email</th>
             <th>Jabatan</th>
-            <th>Department</th>
+            <th>Work Shift</th>
             <th>Aksi</th>
           </tr>
         </thead>
