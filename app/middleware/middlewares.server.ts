@@ -4,8 +4,8 @@ import { getUserFromRequest } from "~/lib/session.server";
 
 
 export const rootMiddleware: MiddlewareFunction<Response> = async (
-  { request, context },
-  next
+    { request, context },
+    next
 ) => {
     const start = performance.now();
     const user = await getUserFromRequest(request);
@@ -21,8 +21,8 @@ export const rootMiddleware: MiddlewareFunction<Response> = async (
 };
 
 export const authMiddleware: MiddlewareFunction<Response> = async (
-  { request, context },
-  next
+    { request, context },
+    next
 ) => {
     const user = context.get(userContext);
     if (!user) {
@@ -35,8 +35,8 @@ export const authMiddleware: MiddlewareFunction<Response> = async (
 
 
 export const requireAdminMiddleware: MiddlewareFunction<Response> = async (
-  { context },
-  next
+    { context },
+    next
 ) => {
     const user = context.get(userContext);
     if (!user) {

@@ -20,7 +20,7 @@ export async function getSession(request: Request) {
 }
 
 export async function getUserFromRequest(
-  request: Request
+    request: Request
 ): Promise<SessionUser | null> {
     const session = await getSession(request);
     const user = session.get("user") as SessionUser | undefined;

@@ -21,8 +21,8 @@ export function validateImageFile(file: File) {
 }
 
 export async function saveUploadedFile(
-  file: File,
-  options?: { simulateFailure?: boolean }
+    file: File,
+    options?: { simulateFailure?: boolean }
 ): Promise<string> {
     validateImageFile(file);
 
