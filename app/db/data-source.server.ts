@@ -39,8 +39,11 @@ export async function getDataSource(): Promise<DataSource> {
     await dataSource.initialize()
     globalForDb.__epnDataSource = dataSource
 
-    await seedInitialData(dataSource);
-    globalForDb.__epnSeeded = true;
+    if (!globalForDb.__epnSeeded) {
+        await seedInitialData(dataSource);
+        globalForDb.__epnSeeded = true;
+    }
+
     return dataSource
 }
 
