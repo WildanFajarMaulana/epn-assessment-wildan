@@ -14,6 +14,7 @@ export default [
         route("admin/shifts", "routes/_app.admin-shifts.tsx"),
         route("parallel-api", "routes/_app.parallel-api.tsx"),
         route("absensi", "routes/_app.absensi.tsx"),
+        route("cached", "routes/_app.cached.tsx"),
     ]),
 
 ] satisfies RouteConfig;

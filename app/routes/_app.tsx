@@ -31,6 +31,8 @@ export default function AppLayout() {
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
             <NavLink to="/absensi">Absensi</NavLink>
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
+            <NavLink to="/cached">Client Cache</NavLink>
+            <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
             <Link to="/report">Page Report</Link>
           </nav>
         </div>

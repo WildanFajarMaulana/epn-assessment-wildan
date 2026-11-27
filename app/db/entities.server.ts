@@ -65,9 +65,9 @@ export const WorkShiftEntity = new EntitySchema<WorkShift>({
     },
     relations: {
         employees: {
-        type: "one-to-many",
-        target: "Employee",
-        inverseSide: "workShift",
+            type: "one-to-many",
+            target: "Employee",
+            inverseSide: "workShift",
         },
     },
 });
@@ -86,10 +86,10 @@ export const EmployeeEntity = new EntitySchema<Employee>({
     },
     relations: {
         workShift: {
-        type: "many-to-one",
-        target: "WorkShift",
-        joinColumn: { name: "workShiftId" },
-        onDelete: "RESTRICT",
+            type: "many-to-one",
+            target: "WorkShift",
+            joinColumn: { name: "workShiftId" },
+            onDelete: "RESTRICT",
         },
     },
 });
@@ -108,22 +108,22 @@ export const DailyAttendanceEntity = new EntitySchema<DailyAttendance>({
     },
     uniques: [
         {
-        name: "UQ_attendance_employee_date",
-        columns: ["employeeId", "attendanceDate"],
+            name: "UQ_attendance_employee_date",
+            columns: ["employeeId", "attendanceDate"],
         },
     ],
     relations: {
         workShift: {
-        type: "many-to-one",
-        target: "WorkShift",
-        joinColumn: { name: "workShiftId" },
-        onDelete: "CASCADE",
+            type: "many-to-one",
+            target: "WorkShift",
+            joinColumn: { name: "workShiftId" },
+            onDelete: "CASCADE",
         },
         employee: {
-        type: "many-to-one",
-        target: "Employee",
-        joinColumn: { name: "employeeId" },
-        onDelete: "CASCADE",
+            type: "many-to-one",
+            target: "Employee",
+            joinColumn: { name: "employeeId" },
+            onDelete: "CASCADE",
         },
     },
 });
