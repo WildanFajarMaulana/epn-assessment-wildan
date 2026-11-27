@@ -21,6 +21,13 @@ export default function AppLayout() {
           <nav>
             <NavLink to="/employees">Employees</NavLink>
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
+            {user.role === "admin" && (
+              <>
+                <NavLink to="/admin/departments">Departments</NavLink>
+                <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
+              </>
+            )}
+            <Link to="/report">Page Report</Link>
           </nav>
         </div>
 
