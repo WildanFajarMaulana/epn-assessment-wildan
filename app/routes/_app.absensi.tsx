@@ -25,11 +25,14 @@ export function meta() {
     return [{ title: "Absensi Harian - HR App" }];
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function loader({ request }: Route.LoaderArgs) {
     const url = new URL(request.url);
     const mode = url.searchParams.get("mode");
 
     if (mode === "list") {
+        await sleep(400);
         const attendances = await listAttendances();
         return { mode: "list" as const, attendances };
     }
