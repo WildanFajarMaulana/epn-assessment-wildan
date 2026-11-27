@@ -1,15 +1,15 @@
 import { useState } from "react";
 
 export interface DepartmentOption {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 }
 
 interface DepartmentDropdownProps {
-  name: string;
-  departments: DepartmentOption[];
-  defaultValue?: number | "";
-  error?: string;
+    name: string;
+    departments: DepartmentOption[];
+    defaultValue?: number | "";
+    error?: string;
 }
 
 export function DepartmentDropdown({

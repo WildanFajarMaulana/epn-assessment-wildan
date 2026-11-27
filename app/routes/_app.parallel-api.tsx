@@ -1,4 +1,5 @@
 import { Form, useLoaderData, useNavigation } from "react-router";
+import axios from "axios";
 
 export function meta() {
   return [{ title: "5 API Paralel - HR App" }];
@@ -27,9 +28,10 @@ async function fetchSingleApi(endpoint: {
 }): Promise<ApiResult> {
   const start = performance.now();
   try {
-    const res = await fetch(endpoint.url, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const items = (await res.json()) as Array<Record<string, unknown>>;
+    const res = await axios.get<Array<Record<string, unknown>>>(endpoint.url, {
+      timeout: 10000,
+    });
+    const items = res.data;
     const first = items[0] ?? {};
     return {
       name: endpoint.name,
