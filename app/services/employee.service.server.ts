@@ -1,9 +1,9 @@
 import { ILike } from "typeorm";
 import { getDataSource } from "~/db/data-source.server";
 import {
-    DepartmentEntity,
     EmployeeEntity,
-    type Department,
+    WorkShiftEntity,
+    type WorkShift,
     type Employee,
 } from "~/db/entities.server";
 import {
@@ -15,7 +15,7 @@ export interface CreateEmployeeInput {
     name: string;
     email: string;
     position: string;
-    departmentId: number;
+    workShiftId: number;
 }
 
 export class AppServiceError extends Error {
@@ -34,31 +34,31 @@ export class AppServiceError extends Error {
   }
 }
 
-export async function listDepartments(): Promise<Department[]> {
+export async function listWorkShifts(): Promise<WorkShift[]> {
     const ds = await getDataSource();
-    return ds.getRepository(DepartmentEntity).find({
-        order: { name: "ASC" },
+    return ds.getRepository(WorkShiftEntity).find({
+        order: { id: "ASC" },
     });
 }
 
 export async function listEmployees(filters?: {
     search?: string;
-    departmentId?: number;
+    workShiftId?: number;
 }): Promise<Employee[]> {
     const ds = await getDataSource();
     const repo = ds.getRepository(EmployeeEntity);
 
     const search = filters?.search?.trim();
-    const departmentId = filters?.departmentId;
+    const workShiftId = filters?.workShiftId;
 
-    if (search && departmentId) {
+    if (search && workShiftId) {
         return repo.find({
         where: [
-            { name: ILike(`%${search}%`), departmentId },
-            { email: ILike(`%${search}%`), departmentId },
-            { position: ILike(`%${search}%`), departmentId },
+            { name: ILike(`%${search}%`), workShiftId },
+            { email: ILike(`%${search}%`), workShiftId },
+            { position: ILike(`%${search}%`), workShiftId },
         ],
-        relations: { department: true },
+        relations: { workShift: true },
         order: { id: "DESC" },
         });
     }
@@ -70,21 +70,21 @@ export async function listEmployees(filters?: {
             { email: ILike(`%${search}%`) },
             { position: ILike(`%${search}%`) },
         ],
-        relations: { department: true },
+        relations: { workShift: true },
         order: { id: "DESC" },
         });
     }
 
-    if (departmentId) {
+    if (workShiftId) {
         return repo.find({
-            where: { departmentId },
-            relations: { department: true },
+            where: { workShiftId },
+            relations: { workShift: true },
             order: { name: "ASC" },
         });
     }
 
     return repo.find({
-        relations: { department: true },
+        relations: { workShift: true },
         order: { id: "DESC" },
     });
 }
@@ -104,12 +104,12 @@ export async function createEmployeeWithPhoto(
     try {
         return await ds.transaction(async (manager) => {
             const empRepo = manager.getRepository(EmployeeEntity);
-            const deptRepo = manager.getRepository(DepartmentEntity);
+            const deptRepo = manager.getRepository(WorkShiftEntity);
 
-            const dept = await deptRepo.findOne({ where: { id: input.departmentId } });
+            const dept = await deptRepo.findOne({ where: { id: input.workShiftId } });
             if (!dept) {
-                throw new AppServiceError("Department tidak ditemukan", 404, {
-                departmentId: "Department tidak ditemukan",
+                throw new AppServiceError("Work Shift tidak ditemukan", 404, {
+                workShiftId: "Work Shift tidak ditemukan",
                 });
             }
 
@@ -125,7 +125,7 @@ export async function createEmployeeWithPhoto(
                 name: input.name.trim(),
                 email: normalizedEmail,
                 position: input.position.trim(),
-                departmentId: input.departmentId,
+                workShiftId: input.workShiftId,
                 photoPath: null as string | null,
             });
 
@@ -164,17 +164,17 @@ export async function updateEmployeeWithPhoto(
     try {
         const updated = await ds.transaction(async (manager) => {
             const empRepo = manager.getRepository(EmployeeEntity);
-            const deptRepo = manager.getRepository(DepartmentEntity);
+            const workShiftRepo = manager.getRepository(WorkShiftEntity);
 
             const employee = await empRepo.findOne({ where: { id } });
             if (!employee) {
                 throw new AppServiceError("Employee tidak ditemukan", 404);
             }
 
-            const dept = await deptRepo.findOne({ where: { id: input.departmentId } });
-            if (!dept) {
-                throw new AppServiceError("Department tidak ditemukan", 404, {
-                departmentId: "Department tidak ditemukan",
+            const workShift = await workShiftRepo.findOne({ where: { id: input.workShiftId } });
+            if (!workShift) {
+                throw new AppServiceError("Work Shift tidak ditemukan", 404, {
+                workShiftId: "Work Shift tidak ditemukan",
                 });
             }
 
@@ -189,7 +189,7 @@ export async function updateEmployeeWithPhoto(
             employee.name = input.name.trim();
             employee.email = normalizedEmail;
             employee.position = input.position.trim();
-            employee.departmentId = input.departmentId;
+            employee.workShiftId = input.workShiftId;
 
             if (photoFile && photoFile.size > 0) {
                 newlyUploadedFile = await saveUploadedFile(photoFile);
@@ -230,55 +230,55 @@ export async function deleteEmployee(id: number): Promise<void> {
     }
 }
 
-export async function createDepartment(name: string): Promise<Department> {
+export async function createWorkShift(name: string): Promise<WorkShift> {
     const ds = await getDataSource();
-    const repo = ds.getRepository(DepartmentEntity);
+    const repo = ds.getRepository(WorkShiftEntity);
 
     const existing = await repo.findOne({ where: { name: name.trim() } });
     if (existing) {
-        throw new AppServiceError("Nama department sudah ada", 409, {
-        name: "Nama department sudah terdaftar",
+        throw new AppServiceError("Nama work shift sudah ada", 409, {
+        name: "Nama work shift sudah terdaftar",
         });
     }
 
     return repo.save({ name: name.trim() });
 }
 
-export async function updateDepartment(
+export async function updateWorkShift(
     id: number,
     name: string
-): Promise<Department> {
+): Promise<WorkShift> {
     const ds = await getDataSource();
-    const repo = ds.getRepository(DepartmentEntity);
+    const repo = ds.getRepository(WorkShiftEntity);
 
-    const dept = await repo.findOne({ where: { id } });
-    if (!dept) {
-        throw new AppServiceError("Department tidak ditemukan", 404);
+    const workShift = await repo.findOne({ where: { id } });
+    if (!workShift) {
+        throw new AppServiceError("Work Shift tidak ditemukan", 404);
     }
 
     const duplicate = await repo.findOne({ where: { name: name.trim() } });
     if (duplicate && duplicate.id !== id) {
-        throw new AppServiceError("Nama department sudah ada", 409, {
-        name: "Nama department sudah digunakan",
+        throw new AppServiceError("Nama work shift sudah ada", 409, {
+        name: "Nama work shift sudah digunakan",
         });
     }
 
-    dept.name = name.trim();
-    return repo.save(dept);
+    workShift.name = name.trim();
+    return repo.save(workShift);
 }
 
 export async function getReportSummary() {
     const ds = await getDataSource();
-    const departments = await ds.getRepository(DepartmentEntity).find({
+    const shifts = await ds.getRepository(WorkShiftEntity).find({
         relations: { employees: true },
-        order: { name: "ASC" },
+        order: { id: "ASC" },
     });
 
-    const rows = departments.map((dept) => ({
-        id: dept.id,
-        name: dept.name,
-        employeeCount: dept.employees?.length ?? 0,
-        employees: dept.employees ?? [],
+    const rows = shifts.map((shift) => ({
+        id: shift.id,
+        name: shift.name,
+        employeeCount: shift.employees?.length ?? 0,
+        employees: shift.employees ?? [],
     }));
 
     const totalEmployees = rows.reduce((sum, item) => sum + item.employeeCount, 0);

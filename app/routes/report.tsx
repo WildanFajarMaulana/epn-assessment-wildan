@@ -36,7 +36,7 @@ export default function ReportPage() {
         }}
       >
         <div>
-          <h2 style={{ margin: 0 }}>Laporan Rekap Karyawan per Department</h2>
+          <h2 style={{ margin: 0 }}>Laporan Rekap Karyawan per Shift Kerja</h2>
         </div>
 
         <div className="row">
@@ -48,14 +48,14 @@ export default function ReportPage() {
       </header>
 
       <p>
-        Total Department: <strong>{rows.length}</strong> | Total Karyawan:{" "}
+        Total Shift Kerja: <strong>{rows.length}</strong> | Total Karyawan:{" "}
         <strong>{totalEmployees}</strong>
       </p>
 
       <table>
         <thead>
           <tr>
-            <th>Department</th>
+            <th>Shift Kerja</th>
             <th>Jumlah Karyawan</th>
             <th>Daftar Anggota</th>
           </tr>

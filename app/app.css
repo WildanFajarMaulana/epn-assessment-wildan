@@ -180,4 +180,20 @@ th {
     font-size: 12px;
 }
 
-
+.loading-bar {
+  height: 6px;
+  width: 100%;
+  background: #e0e0e0;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.loading-bar-inner {
+  height: 100%;
+  width: 45%;
+  background: #0b57d0;
+  animation: slide 1s infinite ease-in-out;
+}
+@keyframes slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}

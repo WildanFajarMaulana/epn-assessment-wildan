@@ -1,32 +1,32 @@
 import { useState } from "react";
 
-export interface DepartmentOption {
+export interface WorkShiftOption {
     id: number;
     name: string;
 }
 
-interface DepartmentDropdownProps {
+interface WorkShiftDropdownProps {
     name: string;
-    departments: DepartmentOption[];
+    workShifts: WorkShiftOption[];
     defaultValue?: number | "";
     error?: string;
 }
 
-export function DepartmentDropdown({
+export function WorkShiftDropdown({
     name,
-    departments,
+    workShifts,
     defaultValue = "",
     error,
-}: DepartmentDropdownProps) {
+}: WorkShiftDropdownProps) {
     const [keyword, setKeyword] = useState("");
     const [selectedId, setSelectedId] = useState<string>(
         defaultValue ? String(defaultValue) : ""
     );
 
-    const filtered = departments.filter(
-        (dept) =>
-        dept.name.toLowerCase().includes(keyword.trim().toLowerCase()) ||
-        String(dept.id) === selectedId
+    const filtered = workShifts.filter(
+        (shift) =>
+        shift.name.toLowerCase().includes(keyword.trim().toLowerCase()) ||
+        String(shift.id) === selectedId
     );
 
     return (
@@ -35,7 +35,7 @@ export function DepartmentDropdown({
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Filter department..."
+            placeholder="Filter shift kerja..."
             style={{ marginBottom: 4 }}
         />
         <select
@@ -43,10 +43,10 @@ export function DepartmentDropdown({
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
         >
-            <option value="">-- Pilih Department --</option>
-            {filtered.map((dept) => (
-            <option key={dept.id} value={dept.id}>
-                {dept.name} 
+            <option value="">-- Pilih Shift Kerja --</option>
+            {filtered.map((shift) => (
+            <option key={shift.id} value={shift.id}>
+                {shift.name}
             </option>
             ))}
         </select>

@@ -23,11 +23,13 @@ export default function AppLayout() {
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
             {user.role === "admin" && (
               <>
-                <NavLink to="/admin/departments">Departments</NavLink>
+                <NavLink to="/admin/shifts">Work Shifts</NavLink>
                 <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
               </>
             )}
             <NavLink to="/parallel-api">5 API Paralel</NavLink>
+            <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
+            <NavLink to="/absensi">Absensi</NavLink>
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />
             <Link to="/report">Page Report</Link>
           </nav>

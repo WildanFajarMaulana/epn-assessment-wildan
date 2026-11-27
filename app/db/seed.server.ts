@@ -1,14 +1,14 @@
 import bcrypt from "bcryptjs";
 import type { DataSource } from "typeorm";
 import {
-    DepartmentEntity,
+    WorkShiftEntity,
     EmployeeEntity,
     UserEntity,
 } from "./entities.server";
 
 export async function seedInitialData(dataSource: DataSource) {
     const userRepo = dataSource.getRepository(UserEntity);
-    const deptRepo = dataSource.getRepository(DepartmentEntity);
+    const shiftRepo = dataSource.getRepository(WorkShiftEntity);
     const empRepo = dataSource.getRepository(EmployeeEntity);
 
     const userCount = await userRepo.count();
@@ -32,12 +32,12 @@ export async function seedInitialData(dataSource: DataSource) {
         ]);
     }
 
-    const deptCount = await deptRepo.count();
-    if (deptCount === 0) {
-        const [it, hr, finance] = await deptRepo.save([
-            { name: "IT" },
-            { name: "HR" },
-            { name: "Finance" },
+    const shiftCount = await shiftRepo.count();
+    if (shiftCount === 0) {
+        const [pagi, siang, malam] = await shiftRepo.save([
+            { name: "Shift Pagi (08:00-17:00)" },
+            { name: "Shift Siang (13:00-22:00)" },
+            { name: "Shift Malam (21:00-06:00)" },
         ]);
 
         await empRepo.save([
@@ -45,28 +45,28 @@ export async function seedInitialData(dataSource: DataSource) {
             name: "Angga Marta",
             email: "angga@epn.test",
             position: "Senior Software Engineer",
-            departmentId: it.id,
+            workShiftId: pagi.id,
             photoPath: null,
         },
         {
             name: "Budi Santoso",
             email: "budi@epn.test",
             position: "Backend Developer",
-            departmentId: it.id,
+            workShiftId: pagi.id,
             photoPath: null,
         },
         {
             name: "Siti Rahma",
             email: "siti@epn.test",
             position: "HR Specialist",
-            departmentId: hr.id,
+            workShiftId: siang.id,
             photoPath: null,
         },
         {
             name: "Dewi Lestari",
             email: "dewi@epn.test",
             position: "Finance Analyst",
-            departmentId: finance.id,
+            workShiftId: siang.id,
             photoPath: null,
         },
         ]);

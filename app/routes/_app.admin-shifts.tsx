@@ -2,29 +2,29 @@ import { data, Form, useActionData, useLoaderData } from "react-router";
 import { requireAdminMiddleware } from "~/middleware/middlewares.server";
 import {
   AppServiceError,
-  createDepartment,
-  listDepartments,
-  updateDepartment,
+  createWorkShift,
+  listWorkShifts,
+  updateWorkShift,
 } from "~/services/employee.service.server";
-import { departmentSchema, formatZodErrors } from "~/validators/schemas";
-import type { Route } from "./+types/_app.admin-departments";
+import { workShiftSchema, formatZodErrors } from "~/validators/schemas";
+import type { Route } from "./+types/_app.admin-shifts";
 
 export const middleware: Route.MiddlewareFunction[] = [requireAdminMiddleware];
 
 export function meta() {
-  return [{ title: "Admin Departments (RBAC) - HR App" }];
+  return [{ title: "Admin Work Shifts (RBAC) - HR App" }];
 }
 
 export async function loader() {
-  const departments = await listDepartments();
-  return { departments };
+  const workShifts = await listWorkShifts();
+  return { workShifts };
 }
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const intent = String(formData.get("intent") ?? "");
 
-  const parsed = departmentSchema.safeParse({
+  const parsed = workShiftSchema.safeParse({
     name: formData.get("name"),
   });
 
@@ -32,7 +32,7 @@ export async function action({ request }: Route.ActionArgs) {
     return data(
       {
         ok: false,
-        message: "Validasi department gagal.",
+        message: "Validasi work shift gagal.",
         fieldErrors: formatZodErrors(parsed.error),
       },
       { status: 400 }
@@ -41,20 +41,20 @@ export async function action({ request }: Route.ActionArgs) {
 
   try {
     if (intent === "create") {
-      await createDepartment(parsed.data.name);
+      await createWorkShift(parsed.data.name);
       return data({
         ok: true,
-        message: `Department "${parsed.data.name}" berhasil ditambahkan.`,
+        message: `Work Shift "${parsed.data.name}" berhasil ditambahkan.`,
         fieldErrors: {} as Record<string, string>,
       });
     }
 
     if (intent === "update") {
       const id = Number(formData.get("id"));
-      await updateDepartment(id, parsed.data.name);
+      await updateWorkShift(id, parsed.data.name);
       return data({
         ok: true,
-        message: `Department "${parsed.data.name}" berhasil diperbarui.`,
+        message: `Work Shift "${parsed.data.name}" berhasil diperbarui.`,
         fieldErrors: {} as Record<string, string>,
       });
     }
@@ -81,7 +81,7 @@ export async function action({ request }: Route.ActionArgs) {
     return data(
       {
         ok: false,
-        message: "Gagal memproses department.",
+        message: "Gagal memproses work shift.",
         fieldErrors: {} as Record<string, string>,
       },
       { status: 500 }
@@ -89,13 +89,13 @@ export async function action({ request }: Route.ActionArgs) {
   }
 }
 
-export default function AdminDepartmentsPage() {
-  const { departments } = useLoaderData<typeof loader>();
+export default function AdminWorkShiftsPage() {
+  const { workShifts } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   return (
     <div>
-      <h2 style={{ marginBottom: 4 }}>Kelola Departments (Admin RBAC)</h2>
+      <h2 style={{ marginBottom: 4 }}>Kelola Work Shifts (Admin RBAC)</h2>
 
       {actionData?.message && (
         <div className={actionData.ok ? "msg-ok" : "msg-err"}>
@@ -104,11 +104,11 @@ export default function AdminDepartmentsPage() {
       )}
 
       <section className="box">
-        <strong>Tambah Department</strong>
+        <strong>Tambah Work Shift</strong>
         <Form method="post" className="row" style={{ marginTop: 8 }}>
           <input type="hidden" name="intent" value="create" />
           <div style={{ flex: 1 }}>
-            <input name="name" placeholder="Nama Department" />
+            <input name="name" placeholder="Nama Work Shift" />
             {actionData?.fieldErrors?.name && (
               <small className="err">{actionData.fieldErrors.name}</small>
             )}
@@ -125,14 +125,14 @@ export default function AdminDepartmentsPage() {
           </tr>
         </thead>
         <tbody>
-          {departments.map((dept, index) => (
-            <tr key={dept.id}>
+          {workShifts.map((shift, index) => (
+            <tr key={shift.id}>
               <td>{index + 1}</td>
               <td>
                 <Form method="post" className="row">
                   <input type="hidden" name="intent" value="update" />
-                  <input type="hidden" name="id" value={dept.id} />
-                  <input name="name" defaultValue={dept.name} style={{ width: 200 }} />
+                  <input type="hidden" name="id" value={shift.id} />
+                  <input name="name" defaultValue={shift.name} style={{ width: 200 }} />
                   <button type="submit" className="btn-light">
                     Update
                   </button>

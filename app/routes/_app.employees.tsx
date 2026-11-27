@@ -6,14 +6,14 @@ import {
   useLoaderData,
   useNavigation,
 } from "react-router";
-import { DepartmentDropdown } from "~/components/DepartmentDropdown";
+import { WorkShiftDropdown } from "~/components/WorkShiftDropdown";
 import { userContext } from "~/lib/context";
 import { UploadValidationError } from "~/lib/upload.server";
 import {
   AppServiceError,
   createEmployeeWithPhoto,
   deleteEmployee,
-  listDepartments,
+  listWorkShifts,
   listEmployees,
   updateEmployeeWithPhoto,
 } from "~/services/employee.service.server";
@@ -33,12 +33,12 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const q = url.searchParams.get("q") || "";
   const user = context.get(userContext)!;
 
-  const [employees, departments] = await Promise.all([
+  const [employees, workShifts] = await Promise.all([
     listEmployees({ search: q }),
-    listDepartments(),
+    listWorkShifts(),
   ]);
 
-  return { employees, departments, q, user };
+  return { employees, workShifts, q, user };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
@@ -188,7 +188,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 }
 
 export default function EmployeesPage() {
-  const { employees, departments, q, user } = useLoaderData<typeof loader>();
+  const { employees, workShifts, q, user } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
@@ -278,11 +278,11 @@ export default function EmployeesPage() {
 
           <div>
             <label>Department (FK Dropdown)</label>
-            <DepartmentDropdown
-              name="departmentId"
-              departments={departments}
-              defaultValue={editingEmployee?.departmentId ?? ""}
-              error={actionData?.fieldErrors?.departmentId}
+            <WorkShiftDropdown
+              name="workShiftId"
+              workShifts={workShifts}
+              defaultValue={editingEmployee?.workShiftId ?? ""}
+              error={actionData?.fieldErrors?.workShiftId}
             />
           </div>
 
@@ -347,7 +347,7 @@ export default function EmployeesPage() {
                 <td>{emp.name}</td>
                 <td>{emp.email}</td>
                 <td>{emp.position}</td>
-                <td>{emp.department?.name ?? "-"}</td>
+                <td>{emp.workShift?.name ?? "-"}</td>
                 <td>
                   <div className="row">
                     <button

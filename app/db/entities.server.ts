@@ -1,7 +1,7 @@
-import {EntitySchema} from "typeorm"
+import { EntitySchema } from "typeorm";
 
-export type UserRole = "admin" | "staff"
-export type AttendanceStatus = "Hadir" | "Izin" | "Sakit"
+export type UserRole = "admin" | "staff";
+export type AttendanceStatus = "Hadir" | "Izin" | "Sakit";
 
 export interface User {
     id: number;
@@ -12,7 +12,7 @@ export interface User {
     createdAt: Date;
 }
 
-export interface Department {
+export interface WorkShift {
     id: number;
     name: string;
     createdAt: Date;
@@ -24,21 +24,21 @@ export interface Employee {
     name: string;
     email: string;
     position: string;
-    departmentId: number;
+    workShiftId: number;
     photoPath: string | null;
     createdAt: Date;
-    department?: Department;
+    workShift?: WorkShift;
 }
 
 export interface DailyAttendance {
     id: number;
-    departmentId: number;
+    workShiftId: number;
     employeeId: number;
-    attendanceDate: string; 
+    attendanceDate: string; // Format: YYYY-MM-DD
     status: AttendanceStatus;
     note: string;
     createdAt: Date;
-    department?: Department;
+    workShift?: WorkShift;
     employee?: Employee;
 }
 
@@ -52,12 +52,12 @@ export const UserEntity = new EntitySchema<User>({
         passwordHash: { type: "varchar", length: 255 },
         role: { type: "varchar", length: 20, default: "staff" },
         createdAt: { type: "timestamp", createDate: true },
-    }
-})
+    },
+});
 
-export const DepartmentEntity = new EntitySchema<Department>({
-    name: "Department",
-    tableName: "departments",
+export const WorkShiftEntity = new EntitySchema<WorkShift>({
+    name: "WorkShift",
+    tableName: "work_shifts",
     columns: {
         id: { type: "int", primary: true, generated: true },
         name: { type: "varchar", length: 120, unique: true },
@@ -65,12 +65,12 @@ export const DepartmentEntity = new EntitySchema<Department>({
     },
     relations: {
         employees: {
-            type: "one-to-many",
-            target: "Employee",
-            inverseSide: "department",
+        type: "one-to-many",
+        target: "Employee",
+        inverseSide: "workShift",
         },
     },
-})
+});
 
 export const EmployeeEntity = new EntitySchema<Employee>({
     name: "Employee",
@@ -80,16 +80,16 @@ export const EmployeeEntity = new EntitySchema<Employee>({
         name: { type: "varchar", length: 120 },
         email: { type: "varchar", length: 160, unique: true },
         position: { type: "varchar", length: 120 },
-        departmentId: { type: "int" },
+        workShiftId: { type: "int" },
         photoPath: { type: "varchar", length: 255, nullable: true },
         createdAt: { type: "timestamp", createDate: true },
     },
     relations: {
-        department: {
-            type: "many-to-one",
-            target: "Department",
-            joinColumn: { name: "departmentId" },
-            onDelete: "RESTRICT",
+        workShift: {
+        type: "many-to-one",
+        target: "WorkShift",
+        joinColumn: { name: "workShiftId" },
+        onDelete: "RESTRICT",
         },
     },
 });
@@ -99,7 +99,7 @@ export const DailyAttendanceEntity = new EntitySchema<DailyAttendance>({
     tableName: "daily_attendances",
     columns: {
         id: { type: "int", primary: true, generated: true },
-        departmentId: { type: "int" },
+        workShiftId: { type: "int" },
         employeeId: { type: "int" },
         attendanceDate: { type: "varchar", length: 10 },
         status: { type: "varchar", length: 20, default: "Hadir" },
@@ -108,22 +108,22 @@ export const DailyAttendanceEntity = new EntitySchema<DailyAttendance>({
     },
     uniques: [
         {
-            name: "UQ_attendance_employee_date",
-            columns: ["employeeId", "attendanceDate"],
+        name: "UQ_attendance_employee_date",
+        columns: ["employeeId", "attendanceDate"],
         },
     ],
     relations: {
-        department: {
-            type: "many-to-one",
-            target: "Department",
-            joinColumn: { name: "departmentId" },
-            onDelete: "CASCADE",
+        workShift: {
+        type: "many-to-one",
+        target: "WorkShift",
+        joinColumn: { name: "workShiftId" },
+        onDelete: "CASCADE",
         },
         employee: {
-            type: "many-to-one",
-            target: "Employee",
-            joinColumn: { name: "employeeId" },
-            onDelete: "CASCADE",
+        type: "many-to-one",
+        target: "Employee",
+        joinColumn: { name: "employeeId" },
+        onDelete: "CASCADE",
         },
     },
 });

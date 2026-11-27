@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { DataSource } from "typeorm";
 import {
-    DepartmentEntity,
+    WorkShiftEntity,
     EmployeeEntity,
     DailyAttendanceEntity,
     UserEntity,
@@ -30,7 +30,7 @@ export async function getDataSource(): Promise<DataSource> {
         logging: false,
         entities: [
             UserEntity,
-            DepartmentEntity,
+            WorkShiftEntity,
             EmployeeEntity,
             DailyAttendanceEntity
         ]

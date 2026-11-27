@@ -11,8 +11,9 @@ export default [
 
     layout("routes/_app.tsx", [
         route("employees", "routes/_app.employees.tsx"),
-        route("admin/departments", "routes/_app.admin-departments.tsx"),
+        route("admin/shifts", "routes/_app.admin-shifts.tsx"),
         route("parallel-api", "routes/_app.parallel-api.tsx"),
+        route("absensi", "routes/_app.absensi.tsx"),
     ]),
 
 ] satisfies RouteConfig;
