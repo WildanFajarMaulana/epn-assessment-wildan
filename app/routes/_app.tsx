@@ -17,7 +17,7 @@ export default function AppLayout() {
     <div className="layout">
       <aside className="sidebar">
         <div>
-          <strong>HR &amp; Quota App</strong>
+          <strong>HR &amp; Absensi App</strong>
           <nav>
             <NavLink to="/employees">Employees</NavLink>
             <hr style={{ width: "100%", border: 0, borderTop: "1px solid #eee" }} />

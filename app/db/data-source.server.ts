@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import {
     DepartmentEntity,
     EmployeeEntity,
-    QuotaClaimEntity,
+    DailyAttendanceEntity,
     UserEntity,
 } from "./entities.server";
 import { seedInitialData } from "./seed.server";
@@ -32,7 +32,7 @@ export async function getDataSource(): Promise<DataSource> {
             UserEntity,
             DepartmentEntity,
             EmployeeEntity,
-            QuotaClaimEntity
+            DailyAttendanceEntity
         ]
     })
 

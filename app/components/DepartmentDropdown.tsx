@@ -3,7 +3,6 @@ import { useState } from "react";
 export interface DepartmentOption {
   id: number;
   name: string;
-  quota: number;
 }
 
 interface DepartmentDropdownProps {
@@ -47,7 +46,7 @@ export function DepartmentDropdown({
             <option value="">-- Pilih Department --</option>
             {filtered.map((dept) => (
             <option key={dept.id} value={dept.id}>
-                {dept.name} (Sisa Kuota: {dept.quota})
+                {dept.name} 
             </option>
             ))}
         </select>

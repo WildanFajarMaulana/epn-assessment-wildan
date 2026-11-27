@@ -4,7 +4,7 @@ import {
   AppServiceError,
   createDepartment,
   listDepartments,
-  updateDepartmentQuota,
+  updateDepartment,
 } from "~/services/employee.service.server";
 import { departmentSchema, formatZodErrors } from "~/validators/schemas";
 import type { Route } from "./+types/_app.admin-departments";
@@ -26,7 +26,6 @@ export async function action({ request }: Route.ActionArgs) {
 
   const parsed = departmentSchema.safeParse({
     name: formData.get("name"),
-    quota: formData.get("quota"),
   });
 
   if (!parsed.success) {
@@ -42,7 +41,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   try {
     if (intent === "create") {
-      await createDepartment(parsed.data.name, parsed.data.quota);
+      await createDepartment(parsed.data.name);
       return data({
         ok: true,
         message: `Department "${parsed.data.name}" berhasil ditambahkan.`,
@@ -52,7 +51,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     if (intent === "update") {
       const id = Number(formData.get("id"));
-      await updateDepartmentQuota(id, parsed.data.name, parsed.data.quota);
+      await updateDepartment(id, parsed.data.name);
       return data({
         ok: true,
         message: `Department "${parsed.data.name}" berhasil diperbarui.`,
@@ -114,12 +113,6 @@ export default function AdminDepartmentsPage() {
               <small className="err">{actionData.fieldErrors.name}</small>
             )}
           </div>
-          <div style={{ width: 110 }}>
-            <input name="quota" type="number" defaultValue={5} min={0} />
-            {actionData?.fieldErrors?.quota && (
-              <small className="err">{actionData.fieldErrors.quota}</small>
-            )}
-          </div>
           <button type="submit">Tambah</button>
         </Form>
       </section>
@@ -140,13 +133,6 @@ export default function AdminDepartmentsPage() {
                   <input type="hidden" name="intent" value="update" />
                   <input type="hidden" name="id" value={dept.id} />
                   <input name="name" defaultValue={dept.name} style={{ width: 200 }} />
-                  <input
-                    name="quota"
-                    type="number"
-                    min={0}
-                    defaultValue={dept.quota}
-                    style={{ width: 90 }}
-                  />
                   <button type="submit" className="btn-light">
                     Update
                   </button>

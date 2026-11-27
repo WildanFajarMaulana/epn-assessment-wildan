@@ -22,11 +22,6 @@ export const employeeUpdateSchema = employeeSchema.extend({
 
 export const departmentSchema = z.object({
     name: z.string().trim().min(2, "Nama department minimal 2 karakter").max(120),
-    quota: z.coerce
-        .number({ error: "Kuota harus berupa angka" })
-        .int("Kuota harus bilangan bulat")
-        .min(0, "Kuota tidak boleh negatif")
-        .max(1000, "Kuota maksimal 1000"),
 });
 
 export const MAX_UPLOAD_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -53,20 +48,20 @@ export const uploadFileMetaSchema = z.object({
         .max(MAX_UPLOAD_SIZE_BYTES, "Ukuran file maksimal 2 MB"),
 });
 
-
-export const quotaClaimSchema = z.object({
+export const attendanceSchema = z.object({
     departmentId: z.coerce.number().int().positive("Department wajib dipilih"),
     employeeId: z.coerce.number().int().positive("Employee wajib dipilih"),
-    amount: z.coerce
-        .number({ error: "Jumlah kuota harus angka" })
-        .int("Jumlah harus bilangan bulat")
-        .min(1, "Jumlah minimal 1")
-        .max(10, "Jumlah maksimal 10 per klaim"),
+    attendanceDate: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD"),
+    status: z.enum(["Hadir", "Izin", "Sakit"], {
+        error: "Status harus Hadir, Izin, atau Sakit",
+    }),
     note: z.string().trim().min(3, "Catatan minimal 3 karakter").max(255),
 });
 
-export const quotaClaimUpdateSchema = quotaClaimSchema.extend({
-    id: z.coerce.number().int().positive("ID klaim tidak valid"),
+export const attendanceUpdateSchema = attendanceSchema.extend({
+    id: z.coerce.number().int().positive("ID absensi tidak valid"),
 });
 
 export function formatZodErrors(error: z.ZodError): Record<string, string> {

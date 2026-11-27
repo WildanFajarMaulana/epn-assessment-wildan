@@ -230,7 +230,7 @@ export async function deleteEmployee(id: number): Promise<void> {
     }
 }
 
-export async function createDepartment(name: string, quota: number): Promise<Department> {
+export async function createDepartment(name: string): Promise<Department> {
     const ds = await getDataSource();
     const repo = ds.getRepository(DepartmentEntity);
 
@@ -241,13 +241,12 @@ export async function createDepartment(name: string, quota: number): Promise<Dep
         });
     }
 
-    return repo.save({ name: name.trim(), quota });
+    return repo.save({ name: name.trim() });
 }
 
-export async function updateDepartmentQuota(
+export async function updateDepartment(
     id: number,
-    name: string,
-    quota: number
+    name: string
 ): Promise<Department> {
     const ds = await getDataSource();
     const repo = ds.getRepository(DepartmentEntity);
@@ -265,7 +264,6 @@ export async function updateDepartmentQuota(
     }
 
     dept.name = name.trim();
-    dept.quota = quota;
     return repo.save(dept);
 }
 
@@ -279,13 +277,11 @@ export async function getReportSummary() {
     const rows = departments.map((dept) => ({
         id: dept.id,
         name: dept.name,
-        quota: dept.quota,
         employeeCount: dept.employees?.length ?? 0,
         employees: dept.employees ?? [],
     }));
 
     const totalEmployees = rows.reduce((sum, item) => sum + item.employeeCount, 0);
-    const totalQuota = rows.reduce((sum, item) => sum + item.quota, 0);
 
-    return { rows, totalEmployees, totalQuota };
+    return { rows, totalEmployees };
 }

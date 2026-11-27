@@ -21,7 +21,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function ReportPage() {
-  const { rows, totalEmployees, totalQuota } =
+  const { user, generatedAt, rows, totalEmployees } =
     useLoaderData<typeof loader>();
 
   return (
@@ -36,21 +36,20 @@ export default function ReportPage() {
         }}
       >
         <div>
-          <h2 style={{ margin: 0 }}>Laporan Rekap Karyawan &amp; Kuota</h2>
+          <h2 style={{ margin: 0 }}>Laporan Rekap Karyawan per Department</h2>
         </div>
 
         <div className="row">
           <button type="button" onClick={() => window.print()}>
             Print
           </button>
-          <Link to="/employees">← Dashboard</Link>
+          <Link to="/employees">Kembali ke Dashboard</Link>
         </div>
       </header>
 
       <p>
         Total Department: <strong>{rows.length}</strong> | Total Karyawan:{" "}
-        <strong>{totalEmployees}</strong> | Total Sisa Kuota:{" "}
-        <strong>{totalQuota}</strong>
+        <strong>{totalEmployees}</strong>
       </p>
 
       <table>
@@ -58,8 +57,7 @@ export default function ReportPage() {
           <tr>
             <th>Department</th>
             <th>Jumlah Karyawan</th>
-            <th>Sisa Kuota</th>
-            <th>Anggota</th>
+            <th>Daftar Anggota</th>
           </tr>
         </thead>
         <tbody>
@@ -69,7 +67,6 @@ export default function ReportPage() {
                 <strong>{row.name}</strong>
               </td>
               <td>{row.employeeCount}</td>
-              <td>{row.quota}</td>
               <td>
                 {row.employees.length > 0
                   ? row.employees.map((e) => e.name).join(", ")

@@ -35,9 +35,9 @@ export async function seedInitialData(dataSource: DataSource) {
     const deptCount = await deptRepo.count();
     if (deptCount === 0) {
         const [it, hr, finance] = await deptRepo.save([
-            { name: "IT", quota: 5 },
-            { name: "HR", quota: 3 },
-            { name: "Finance", quota: 4 },
+            { name: "IT" },
+            { name: "HR" },
+            { name: "Finance" },
         ]);
 
         await empRepo.save([

@@ -1,6 +1,7 @@
 import {EntitySchema} from "typeorm"
 
 export type UserRole = "admin" | "staff"
+export type AttendanceStatus = "Hadir" | "Izin" | "Sakit"
 
 export interface User {
     id: number;
@@ -14,7 +15,6 @@ export interface User {
 export interface Department {
     id: number;
     name: string;
-    quota: number;
     createdAt: Date;
     employees?: Employee[];
 }
@@ -30,11 +30,12 @@ export interface Employee {
     department?: Department;
 }
 
-export interface QuotaClaim {
+export interface DailyAttendance {
     id: number;
     departmentId: number;
     employeeId: number;
-    amount: number;
+    attendanceDate: string; 
+    status: AttendanceStatus;
     note: string;
     createdAt: Date;
     department?: Department;
@@ -60,7 +61,6 @@ export const DepartmentEntity = new EntitySchema<Department>({
     columns: {
         id: { type: "int", primary: true, generated: true },
         name: { type: "varchar", length: 120, unique: true },
-        quota: { type: "int", default: 5 },
         createdAt: { type: "timestamp", createDate: true },
     },
     relations: {
@@ -94,17 +94,24 @@ export const EmployeeEntity = new EntitySchema<Employee>({
     },
 });
 
-export const QuotaClaimEntity = new EntitySchema<QuotaClaim>({
-    name: "QuotaClaim",
-    tableName: "quota_claims",
+export const DailyAttendanceEntity = new EntitySchema<DailyAttendance>({
+    name: "DailyAttendance",
+    tableName: "daily_attendances",
     columns: {
         id: { type: "int", primary: true, generated: true },
         departmentId: { type: "int" },
         employeeId: { type: "int" },
-        amount: { type: "int", default: 1 },
+        attendanceDate: { type: "varchar", length: 10 },
+        status: { type: "varchar", length: 20, default: "Hadir" },
         note: { type: "varchar", length: 255 },
         createdAt: { type: "timestamp", createDate: true },
     },
+    uniques: [
+        {
+            name: "UQ_attendance_employee_date",
+            columns: ["employeeId", "attendanceDate"],
+        },
+    ],
     relations: {
         department: {
             type: "many-to-one",
