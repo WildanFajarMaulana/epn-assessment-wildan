@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import type { DataSource } from "typeorm";
 import {
-  DepartmentEntity,
-  EmployeeEntity,
-  UserEntity,
+    DepartmentEntity,
+    EmployeeEntity,
+    UserEntity,
 } from "./entities.server";
 
 export async function seedInitialData(dataSource: DataSource) {

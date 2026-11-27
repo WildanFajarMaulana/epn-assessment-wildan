@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { DataSource } from "typeorm";
 import {
-  DepartmentEntity,
-  EmployeeEntity,
-  QuotaClaimEntity,
-  UserEntity,
+    DepartmentEntity,
+    EmployeeEntity,
+    QuotaClaimEntity,
+    UserEntity,
 } from "./entities.server";
 import { seedInitialData } from "./seed.server";
 
